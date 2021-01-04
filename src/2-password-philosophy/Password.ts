@@ -1,10 +1,10 @@
-const PASSWORD_RE = /(\d+)-(\d+) (\w)+: (\w+)/i;
-
 export default class Password {
-  min: number = 0;
-  max: number = 0;
-  key: string = '';
-  password: string = '';
+  static RE = /(\d+)-(\d+) (\w)+: (\w+)/i;
+
+  min = 0;
+  max = 0;
+  key = '';
+  password = '';
 
   constructor(line?: string) {
     if (!line) {
@@ -26,7 +26,7 @@ export default class Password {
   parse(
     line: string
   ): { min: number; max: number; key: string; password: string } | null {
-    const parsedPassword = PASSWORD_RE.exec(line);
+    const parsedPassword = Password.RE.exec(line);
 
     if (parsedPassword) {
       // eslint-disable-next-line no-unused-vars
