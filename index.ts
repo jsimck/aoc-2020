@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import ChallengesList from './src/challenges';
+import ChallengesList from './src/ChallengesList';
 
 (() => {
   const challengeNum = (process.argv.length > 2 && process.argv.pop()) || '1';

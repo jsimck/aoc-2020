@@ -12,7 +12,6 @@ npm run build
 npm start [[1, 2, 3 ... 25]]
 ```
 
-
 For **development** (starts watch task using `nodemon`), run:
 ```
 npm run dev [[1, 2, 3 ... 25]]

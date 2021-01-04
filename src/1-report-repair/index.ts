@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import input from './data/input';
+import { loadData } from '../utils';
 
 /**
  * Uses binary search to find complement to given {@code num} which upon adding these two
@@ -73,10 +73,11 @@ function findDoubles(
 }
 
 export default function reportRepair() {
+  const input = loadData(__dirname, './data/input.txt').map((v) => parseInt(v));
   const doubles = findDoubles(input, 2020);
 
   if (Array.isArray(doubles)) {
-    const sum = doubles.reduce((sum, cur) => sum * cur, 1);
+    const sum = doubles.reduce((acc, cur) => acc * cur, 1);
 
     console.log(
       chalk.cyan(
