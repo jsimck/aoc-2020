@@ -9,7 +9,7 @@ import ChallengesList from './src/ChallengesList';
     typeof ChallengesList[challengeNum] === 'function'
   ) {
     console.log(`Running challenge number: ${challengeNum}`);
-    console.log('-------------------------------------\n');
+    console.log('-------------------------------------');
     ChallengesList[challengeNum]();
   } else {
     console.error(

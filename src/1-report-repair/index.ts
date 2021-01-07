@@ -72,7 +72,7 @@ function findDoubles(
   return null;
 }
 
-export default function reportRepair() {
+export default function (): void {
   const input = loadData(__dirname, './data/input.txt').map((v) => parseInt(v));
   const doubles = findDoubles(input, 2020);
 

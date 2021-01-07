@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { loadData } from '../utils';
 import Password from './Password';
 
-export default function passwordPhilosophy(): void {
+export default function (): void {
   const input = loadData(__dirname, './data/input.txt');
   const parsedPasswords = input.map((line) => new Password(line));
   const validPassword = parsedPasswords.reduce((acc, cur: Password) => {
