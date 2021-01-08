@@ -23,6 +23,10 @@ export default class Password {
     this.password = parsedPassword.password;
   }
 
+  private inRange(val: number): boolean {
+    return val >= this.min && val <= this.max;
+  }
+
   parse(
     line: string
   ): { min: number; max: number; key: string; password: string } | null {
@@ -55,7 +59,19 @@ export default class Password {
     );
   }
 
-  private inRange(val: number): boolean {
-    return val >= this.min && val <= this.max;
+  isReallyValid(): boolean {
+    const isFirstPosValid = this.password[this.min - 1] === this.key;
+    const isSecondPosValid = this.password[this.max - 1] === this.key;
+
+    return (
+      (isFirstPosValid && !isSecondPosValid) ||
+      (!isFirstPosValid && isSecondPosValid)
+    );
+  }
+
+  toString(): string {
+    return `${this.min}-${this.max} ${this.key}:${
+      this.password
+    }, valid: ${this.isValid()}, reallyValid ${this.isReallyValid()}`;
   }
 }
