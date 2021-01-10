@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import ChallengesList from './src/ChallengesList';
 
-(() => {
+(async () => {
   const challengeNum = (process.argv.length > 2 && process.argv.pop()) || '1';
 
   if (
@@ -10,7 +10,7 @@ import ChallengesList from './src/ChallengesList';
   ) {
     console.log(`Running challenge number: ${challengeNum}`);
     console.log('-------------------------------------');
-    ChallengesList[challengeNum]();
+    await ChallengesList[challengeNum]();
   } else {
     console.error(
       chalk.red(

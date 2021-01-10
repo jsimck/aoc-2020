@@ -1,17 +1,21 @@
+import { promisify } from 'util';
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 
-function loadData(dirname: string, filePath: string): string[] {
-  const absolutePath = path.resolve(dirname, filePath);
+const readFile = promisify(fs.readFile);
+
+async function loadData(fileName: string): Promise<string[]> {
+  const absolutePath = path.resolve('./data/', fileName);
 
   try {
-    return fs.readFileSync(absolutePath, { encoding: 'utf-8' }).split('\n');
+    return (await readFile(absolutePath, { encoding: 'utf-8' })).split('\n');
   } catch (error) {
     console.error(
-      chalk.red(`Error occurred while loading input file: ${absolutePath}`)
+      chalk.red(`Error occurred while loading data file: ${absolutePath}`),
+      '\n',
+      chalk.red(error)
     );
-    console.error(chalk.red(error.message));
   }
 
   return [];

@@ -29,28 +29,34 @@ function findComplement(
   }
 }
 
-function findDoubles(input: number[], expectedSum: number): Double | null {
+async function findDoubles(
+  input: number[],
+  expectedSum: number
+): Promise<Double | null> {
   const sortedInput = input.sort((a, b) => a - b);
   const inputLen = sortedInput.length;
 
-  for (let i = 0; i < inputLen; i++) {
-    const searchArray = [...sortedInput];
-    searchArray.splice(i, 1);
+  return Promise.any(
+    await input.map(async (value, i) => {
+      const searchArray = [...sortedInput];
+      searchArray.splice(i, 1);
 
-    const complement = findComplement(
-      searchArray,
-      sortedInput[i],
-      expectedSum,
-      0,
-      inputLen - 1
-    );
+      const complement = findComplement(
+        searchArray,
+        value,
+        expectedSum,
+        0,
+        inputLen - 1
+      );
 
-    if (complement !== null) {
-      return [complement, sortedInput[i]];
-    }
-  }
+      if (complement !== null) {
+        return [complement, value];
+      }
 
-  return null;
+      // Hacky solution
+      throw new Error('Not found');
+    })
+  );
 }
 
 function findTriples(input: number[], expectedSum: number): Triple | null {
@@ -76,10 +82,17 @@ function findTriples(input: number[], expectedSum: number): Triple | null {
   return null;
 }
 
-export default function (): void {
-  const input = loadData(__dirname, './data/input.txt').map((v) => parseInt(v));
-  const doubles = findDoubles(input, 2020);
-  const triples = findTriples(input, 2020);
+export default async function (): Promise<void> {
+  const input = (await loadData('./1-report-repair.txt')).map((v) =>
+    parseInt(v)
+  );
+
+  const [doubles, triples] = await Promise.all([
+    findDoubles(input, 2020),
+    findTriples(input, 2020),
+  ]);
+
+  console.log(doubles);
 
   if (Array.isArray(doubles) && Array.isArray(triples)) {
     const doublesSum = doubles.reduce((acc, cur) => acc * cur, 1);

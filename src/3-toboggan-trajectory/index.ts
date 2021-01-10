@@ -3,10 +3,10 @@ import { loadData } from '../utils';
 
 const TREE_SYMBOL = '#';
 
-type Direction = {
+interface Direction {
   x: number;
   y: number;
-};
+}
 
 function traverse(
   input: string[],
@@ -37,8 +37,8 @@ function traverse(
   );
 }
 
-export default function (): void {
-  const input = loadData(__dirname, './data/input.txt');
+export default async function (): Promise<void> {
+  const input = await loadData('3-toboggan-trajectory.txt');
   const numTrees = traverse(input, 0, 3, 0, 1, 0);
 
   console.log(
@@ -58,11 +58,10 @@ export default function (): void {
     { x: 1, y: 2 },
   ];
 
-  const numTreeMultiplePasses = directions.reduce((acc, cur) => {
-    const path = traverse(input, 0, cur.x, 0, cur.y, 0);
-    console.log(path);
-    return acc * path;
-  }, 1);
+  const numTreeMultiplePasses = directions.reduce(
+    (acc, cur) => acc * traverse(input, 0, cur.x, 0, cur.y, 0),
+    1
+  );
 
   console.log(
     chalk.cyan(

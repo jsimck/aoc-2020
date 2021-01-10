@@ -11,17 +11,13 @@ interface ValidationCallback {
   (password: Password): boolean;
 }
 
-function validateCollection(
+async function validateCollection(
   passwords: Password[],
   cb: ValidationCallback
-): ValidationResults {
+): Promise<ValidationResults> {
   const valid = passwords.reduce((acc, cur) => {
     if (cb(cur)) {
       acc++;
-    }
-
-    if (cur.isReallyValid()) {
-      console.log(cur.toString());
     }
 
     return acc;
@@ -33,42 +29,37 @@ function validateCollection(
   };
 }
 
-export default function (): void {
-  const input = loadData(__dirname, './data/input.txt');
+export default async function (): Promise<void> {
+  const input = await loadData('2-password-philosophy.txt');
   const passwordsCollection = input.map((line) => new Password(line));
+  let results: [ValidationResults, ValidationResults] | [] = [];
 
-  const validatedPasswordsCount = validateCollection(
-    passwordsCollection,
-    (password) => password.isValid()
-  );
-  const reallyValidatedPasswordsCount = validateCollection(
-    passwordsCollection,
-    (password) => password.isReallyValid()
-  );
+  try {
+    results = await Promise.all([
+      validateCollection(passwordsCollection, (p) => p.isValid()),
+      validateCollection(passwordsCollection, (p) => p.isReallyValid()),
+    ]);
+  } catch (error) {
+    console.error(chalk.red(error));
+  }
 
-  console.log(chalk.cyan(`Out of ${passwordsCollection.length}, there are:`));
-  console.log(
-    chalk.greenBright(
-      ` - ${chalk.underline.bold(validatedPasswordsCount.valid)} valid`
-    )
-  );
-  console.log(
-    chalk.greenBright(
-      ` - ${chalk.underline.bold(
-        reallyValidatedPasswordsCount.valid
-      )} really valid`
-    )
-  );
-  console.log(
-    chalk.redBright(
-      ` - ${chalk.underline.bold(validatedPasswordsCount.invalid)} invalid`
-    )
-  );
-  console.log(
-    chalk.redBright(
-      ` - ${chalk.underline.bold(
-        reallyValidatedPasswordsCount.invalid
-      )} really invalid`
-    )
-  );
+  const [r1, r2] = results;
+
+  if (r1 && r2) {
+    console.log(chalk.cyan(`Out of ${passwordsCollection.length}, there are:`));
+    console.log(
+      chalk.greenBright(` - ${chalk.underline.bold(r1.valid)} valid`)
+    );
+    console.log(
+      chalk.greenBright(` - ${chalk.underline.bold(r2.valid)} really valid`)
+    );
+    console.log(
+      chalk.redBright(` - ${chalk.underline.bold(r1.invalid)} invalid`)
+    );
+    console.log(
+      chalk.redBright(` - ${chalk.underline.bold(r2.invalid)} really invalid`)
+    );
+  } else {
+    console.error(chalk.red('Unknown error.'));
+  }
 }

@@ -3,7 +3,7 @@ import passwordPhilosophy from './2-password-philosophy';
 import tobogganTrajectory from './3-toboggan-trajectory';
 
 const ChallengesList: {
-  [challengeNum: string]: () => void;
+  [challengeNum: string]: () => Promise<void>;
 } = {
   '1': reportRepair,
   '2': passwordPhilosophy,
