@@ -36,30 +36,30 @@ async function findDoubles(
   const sortedInput = input.sort((a, b) => a - b);
   const inputLen = sortedInput.length;
 
-  return Promise.any(
-    await input.map(async (value, i) => {
-      const searchArray = [...sortedInput];
-      searchArray.splice(i, 1);
+  for (let i = 0; i < inputLen; i++) {
+    const searchArray = [...sortedInput];
+    searchArray.splice(i, 1);
 
-      const complement = findComplement(
-        searchArray,
-        value,
-        expectedSum,
-        0,
-        inputLen - 1
-      );
+    const complement = findComplement(
+      searchArray,
+      sortedInput[i],
+      expectedSum,
+      0,
+      inputLen - 1
+    );
 
-      if (complement !== null) {
-        return [complement, value];
-      }
+    if (complement !== null) {
+      return [complement, sortedInput[i]];
+    }
+  }
 
-      // Hacky solution
-      throw new Error('Not found');
-    })
-  );
+  return null;
 }
 
-function findTriples(input: number[], expectedSum: number): Triple | null {
+async function findTriples(
+  input: number[],
+  expectedSum: number
+): Promise<Triple | null> {
   const inputLen = input.length;
 
   for (let i = 0; i < inputLen; i++) {
@@ -91,8 +91,6 @@ export default async function (): Promise<void> {
     findDoubles(input, 2020),
     findTriples(input, 2020),
   ]);
-
-  console.log(doubles);
 
   if (Array.isArray(doubles) && Array.isArray(triples)) {
     const doublesSum = doubles.reduce((acc, cur) => acc * cur, 1);
